@@ -28,7 +28,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t tyrbropro/order-management:latest .
+        run: docker build -t Tyrbropro/order-management:latest .
 
       - name: Push Docker image
-        run: docker push tyrbropro/order-management:latest
+        run: docker push Tyrbropro/order-management:latest
