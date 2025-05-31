@@ -57,7 +57,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable)
-                .formLogin(form -> form.defaultSuccessUrl("/"))
+                .formLogin(form -> form.defaultSuccessUrl("/swagger-ui/index.html", true))
                 .httpBasic(Customizer.withDefaults())
                 .build();
     }
