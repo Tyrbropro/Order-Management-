@@ -9,7 +9,7 @@
 		<relativePath/>
 	</parent>
 	<groupId>com.github.Tyrbropro</groupId>
-	<artifactId>order-management</artifactId>
+	<artifactId>management</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Order Management System</name>
 	<description>A simple Spring Boot project for managing orders and products.</description>
