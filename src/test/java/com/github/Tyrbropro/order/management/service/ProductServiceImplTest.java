@@ -17,11 +17,11 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class ProductServiceTest {
+public class ProductServiceImplTest {
 
     private ProductRepository productRepository;
     private ProductRequestDTO productRequestDTOs;
-    private ProductService productService;
+    private ProductServiceImpl productServiceImpl;
     private Product product;
 
     private final long id = 1L;
@@ -30,7 +30,7 @@ public class ProductServiceTest {
     public void setUp() {
         productRepository = mock(ProductRepository.class);
         productRequestDTOs = TestDataFactory.createProductRequestDTO();
-        productService = new ProductService(productRepository);
+        productServiceImpl = new ProductServiceImpl(productRepository);
         product = TestDataFactory.createProduct(id);
     }
 
@@ -38,7 +38,7 @@ public class ProductServiceTest {
     void createProduct_success() {
         when(productRepository.save(any(Product.class))).thenReturn(product);
 
-        ProductResponseDTO productResponseDTO = productService.createProduct(productRequestDTOs);
+        ProductResponseDTO productResponseDTO = productServiceImpl.createProduct(productRequestDTOs);
 
         assertNotNull(productResponseDTO);
         assertEquals(10, productResponseDTO.stock());
@@ -51,7 +51,7 @@ public class ProductServiceTest {
     void getAllProducts_success() {
         when(productRepository.findAll()).thenReturn(List.of(product));
 
-        List<ProductResponseDTO> productResponseDTOS = productService.getAllProducts();
+        List<ProductResponseDTO> productResponseDTOS = productServiceImpl.getAllProducts();
 
         assertNotNull(productResponseDTOS);
         assertEquals(1, productResponseDTOS.size());
@@ -62,7 +62,7 @@ public class ProductServiceTest {
     @Test
     void getAllProducts_emptyList() {
         when(productRepository.findAll()).thenReturn(Collections.emptyList());
-        List<ProductResponseDTO> productResponseDTOS = productService.getAllProducts();
+        List<ProductResponseDTO> productResponseDTOS = productServiceImpl.getAllProducts();
 
         assertNotNull(productResponseDTOS);
         assertEquals(0, productResponseDTOS.size());
@@ -73,7 +73,7 @@ public class ProductServiceTest {
     @Test
     void getProductById_success() {
         when(productRepository.findById(id)).thenReturn(Optional.of(product));
-        ProductResponseDTO productResponseDTO = productService.getProductById(id);
+        ProductResponseDTO productResponseDTO = productServiceImpl.getProductById(id);
 
         assertNotNull(productResponseDTO);
         assertEquals(10, productResponseDTO.stock());
@@ -86,7 +86,7 @@ public class ProductServiceTest {
     void getProductById_EntityNotFound() {
         when(productRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> productService.getProductById(id));
+        assertThrows(EntityNotFoundException.class, () -> productServiceImpl.getProductById(id));
         verify(productRepository, times(1)).findById(id);
     }
 
@@ -95,7 +95,7 @@ public class ProductServiceTest {
         when(productRepository.findById(id)).thenReturn(Optional.of(product));
         when(productRepository.save(any(Product.class))).thenReturn(product);
 
-        ProductResponseDTO productResponseDTO = productService.updateProduct(id, productRequestDTOs);
+        ProductResponseDTO productResponseDTO = productServiceImpl.updateProduct(id, productRequestDTOs);
 
         assertNotNull(productResponseDTO);
         assertEquals(10, productResponseDTO.stock());
@@ -106,7 +106,7 @@ public class ProductServiceTest {
     void updateProduct_EntityNotFound() {
         when(productRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> productService.updateProduct(id, productRequestDTOs));
+        assertThrows(EntityNotFoundException.class, () -> productServiceImpl.updateProduct(id, productRequestDTOs));
         verify(productRepository, times(1)).findById(id);
     }
 
@@ -114,7 +114,7 @@ public class ProductServiceTest {
     void deleteProduct_success() {
         when(productRepository.findById(id)).thenReturn(Optional.of(product));
 
-        productService.deleteProduct(id);
+        productServiceImpl.deleteProduct(id);
         verify(productRepository, times(1)).deleteById(id);
     }
 
@@ -122,7 +122,7 @@ public class ProductServiceTest {
     void deleteProduct_EntityNotFound() {
         when(productRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> productService.deleteProduct(id));
+        assertThrows(EntityNotFoundException.class, () -> productServiceImpl.deleteProduct(id));
         verify(productRepository, times(1)).findById(id);
     }
 }

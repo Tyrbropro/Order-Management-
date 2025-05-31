@@ -6,7 +6,6 @@ import com.github.Tyrbropro.order.management.dto.order.RemoveOrderItemDTO;
 import com.github.Tyrbropro.order.management.dto.order.UpdateOrderItemQuantityDTO;
 import com.github.Tyrbropro.order.management.dto.order.item.OrderItemResponseDTO;
 import com.github.Tyrbropro.order.management.entity.Customer;
-import com.github.Tyrbropro.order.management.service.OrderItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -20,16 +19,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "OrderItems", description = "APIs for managing order items")
-@RestController
 @RequestMapping("/orders/{orderId}/items")
-public class OrderItemController {
-
-    private final OrderItemService orderItemService;
-
-    public OrderItemController(OrderItemService orderItemService) {
-        this.orderItemService = orderItemService;
-    }
-
+public interface OrderItemController {
 
     @Operation(summary = "Add item to order",
             description = "Adds a new item to the specified order. Accessible by customers and admins")
@@ -39,12 +30,10 @@ public class OrderItemController {
     })
     @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN')")
     @PostMapping("")
-    public ResponseEntity<OrderItemResponseDTO> addItemToOrder(
+    ResponseEntity<OrderItemResponseDTO> addItemToOrder(
             @Parameter(description = "ID of the order", example = "1")
             @PathVariable @Positive Long orderId, @RequestBody @Valid AddOrderItemDTO dto,
-            @AuthenticationPrincipal Customer currentCustomer) {
-        return ResponseEntity.status(201).body(orderItemService.addItemToOrder(orderId, dto, currentCustomer));
-    }
+            @AuthenticationPrincipal Customer currentCustomer);
 
     @Operation(summary = "Remove item from order",
             description = "Removes an item from the specified order. Accessible by customers and admins")
@@ -55,17 +44,14 @@ public class OrderItemController {
     })
     @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN')")
     @DeleteMapping("")
-    public ResponseEntity<OrderResponseDTO> removeItemFromOrder(
+    ResponseEntity<OrderResponseDTO> removeItemFromOrder(
             @Parameter(description = "ID of the order", example = "1")
             @PathVariable @Positive Long orderId, @RequestBody @Valid RemoveOrderItemDTO dto,
-            @AuthenticationPrincipal Customer currentCustomer) {
-        orderItemService.removeItemFromOrder(orderId, dto, currentCustomer);
-        return ResponseEntity.noContent().build();
-    }
+            @AuthenticationPrincipal Customer currentCustomer);
 
 
     @Operation(summary = "Update item quantity",
-    description = "Updates the quantity of an existing item in the order. Accessible by customers and admins")
+            description = "Updates the quantity of an existing item in the order. Accessible by customers and admins")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Item quantity updated successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid quantity value"),
@@ -74,10 +60,8 @@ public class OrderItemController {
     })
     @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN')")
     @PutMapping("")
-    public ResponseEntity<OrderResponseDTO> updateItemQuantity(
+    ResponseEntity<OrderResponseDTO> updateItemQuantity(
             @Parameter(description = "ID of the order", example = "1")
             @PathVariable @Positive Long orderId, @RequestBody @Valid UpdateOrderItemQuantityDTO dto,
-            @AuthenticationPrincipal Customer currentCustomer) {
-            return ResponseEntity.ok(orderItemService.updateItemQuantity(orderId, dto, currentCustomer));
-    }
+            @AuthenticationPrincipal Customer currentCustomer);
 }

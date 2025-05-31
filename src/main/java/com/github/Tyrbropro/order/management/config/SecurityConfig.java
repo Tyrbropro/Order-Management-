@@ -50,11 +50,7 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/webjars/**"
-                        ).permitAll()
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/orders/**").hasAnyRole("ADMIN", "CUSTOMER")
-                        .requestMatchers("/api/products/**").hasAnyRole("ADMIN", "CUSTOMER")
-                        .anyRequest().authenticated()
+                        ).permitAll().anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(form -> form.defaultSuccessUrl("/swagger-ui/index.html", true))

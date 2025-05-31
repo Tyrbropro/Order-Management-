@@ -4,7 +4,6 @@ import com.github.Tyrbropro.order.management.dto.order.OrderRequestDTO;
 import com.github.Tyrbropro.order.management.dto.order.OrderResponseDTO;
 import com.github.Tyrbropro.order.management.dto.order.OrderStatusUpdateDTO;
 import com.github.Tyrbropro.order.management.entity.Customer;
-import com.github.Tyrbropro.order.management.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,15 +18,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Orders", description = "APIs for managing customer orders")
-@RestController
 @RequestMapping("/orders")
-public class OrderController {
-
-    private final OrderService orderService;
-
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
-    }
+public interface OrderController {
 
     @Operation(summary = "Create a new order", description = "Creates a new order for the authenticated customer")
     @ApiResponses(value = {
@@ -35,19 +27,14 @@ public class OrderController {
             @ApiResponse(responseCode = "400", description = "Invalid order data provided")
     })
     @PostMapping("")
-    public ResponseEntity<OrderResponseDTO> createOrder(@RequestBody @Valid OrderRequestDTO dto,
-                                                        @AuthenticationPrincipal Customer currentCustomer) {
-        OrderResponseDTO response = orderService.createOrder(currentCustomer.getId(), dto);
-        return ResponseEntity.status(201).body(response);
-    }
+    ResponseEntity<OrderResponseDTO> createOrder(@RequestBody @Valid OrderRequestDTO dto,
+                                                        @AuthenticationPrincipal Customer currentCustomer);
 
     @Operation(summary = "Get current customer's orders",
             description = "Retrieves all orders placed by the authenticated customer")
     @ApiResponse(responseCode = "200", description = "Orders retrieved successfully")
     @GetMapping("/my")
-    public ResponseEntity<List<OrderResponseDTO>> myOrders(@AuthenticationPrincipal Customer currentCustomer) {
-        return ResponseEntity.ok(orderService.getAllOrdersByCustomer(currentCustomer.getId()));
-    }
+    ResponseEntity<List<OrderResponseDTO>> myOrders(@AuthenticationPrincipal Customer currentCustomer);
 
     @Operation(summary = "Get order by ID",
             description = "Retrieves the order with the specified ID. Accessible by customers and admins")
@@ -57,12 +44,10 @@ public class OrderController {
     })
     @PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
     @GetMapping("/{id}")
-    public ResponseEntity<OrderResponseDTO> getOrderById(@AuthenticationPrincipal Customer currentCustomer,
+    ResponseEntity<OrderResponseDTO> getOrderById(@AuthenticationPrincipal Customer currentCustomer,
                                                          @Parameter(description = "ID of the order to retrieve",
                                                                  example = "1")
-                                                         @PathVariable @Positive Long id) {
-        return ResponseEntity.ok(orderService.getOrderById(id, currentCustomer));
-    }
+                                                         @PathVariable @Positive Long id);
 
     @Operation(summary = "Cancel order",
             description = "Cancels an existing order. Only customers can cancel their orders")
@@ -72,11 +57,9 @@ public class OrderController {
     })
     @PreAuthorize("hasRole('CUSTOMER')")
     @PutMapping("/{id}/cancel")
-    public ResponseEntity<OrderResponseDTO> cancelOrder(
+    ResponseEntity<OrderResponseDTO> cancelOrder(
             @Parameter(description = "ID of the order to cancel", example = "1")
-            @PathVariable Long id, @AuthenticationPrincipal Customer currentCustomer) {
-            return ResponseEntity.ok(orderService.cancelOrder(id, currentCustomer));
-    }
+            @PathVariable Long id, @AuthenticationPrincipal Customer currentCustomer);
 
     @Operation(summary = "Update order status",
             description = "Updates the status of an existing order. Only admin can perform this operation")
@@ -88,9 +71,7 @@ public class OrderController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}/status")
-    public ResponseEntity<OrderResponseDTO> updateStatusOrder(
+    ResponseEntity<OrderResponseDTO> updateStatusOrder(
             @Parameter(description = "ID of the order to update", example = "1")
-            @PathVariable Long id, @RequestBody @Valid OrderStatusUpdateDTO dto) {
-            return ResponseEntity.ok(orderService.updateStatusOrder(id, dto.status()));
-    }
+            @PathVariable Long id, @RequestBody @Valid OrderStatusUpdateDTO dto);
 }

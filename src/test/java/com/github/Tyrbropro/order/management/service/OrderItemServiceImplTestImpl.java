@@ -23,12 +23,12 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class OrderItemServiceTest {
+public class OrderItemServiceImplTestImpl {
 
     private OrderRepository orderRepository;
     private ProductRepository productRepository;
 
-    private OrderItemService orderItemService;
+    private OrderItemServiceImpl orderItemServiceImpl;
 
     private Order order;
     private Product product;
@@ -46,8 +46,8 @@ public class OrderItemServiceTest {
         productRepository = mock(ProductRepository.class);
         CustomerRepository customerRepository = mock(CustomerRepository.class);
 
-        OrderService orderService = new OrderService(orderRepository, customerRepository, productRepository);
-        orderItemService = new OrderItemService(orderRepository, productRepository, orderService);
+        OrderServiceImpl orderServiceImpl = new OrderServiceImpl(orderRepository, customerRepository, productRepository);
+        orderItemServiceImpl = new OrderItemServiceImpl(orderRepository, productRepository, orderServiceImpl);
 
         order = TestDataFactory.createOrder(id, id, id, id);
         product = TestDataFactory.createProduct(id);
@@ -61,7 +61,7 @@ public class OrderItemServiceTest {
         when(orderRepository.findById(id)).thenReturn(Optional.of(order));
         when(productRepository.findById(id)).thenReturn(Optional.of(product));
 
-        orderItemService.addItemToOrder(id, addOrderItemDTO, customer);
+        orderItemServiceImpl.addItemToOrder(id, addOrderItemDTO, customer);
 
         assertEquals(8, product.getStock());
         assertEquals(1, order.getItems().size());
@@ -73,7 +73,7 @@ public class OrderItemServiceTest {
     @Test
     void addOrderItem_orderNotFound() {
         when(orderRepository.findById(id)).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, () -> orderItemService.addItemToOrder(id, addOrderItemDTO, customer));
+        assertThrows(EntityNotFoundException.class, () -> orderItemServiceImpl.addItemToOrder(id, addOrderItemDTO, customer));
     }
 
     @Test
@@ -81,7 +81,7 @@ public class OrderItemServiceTest {
         when(orderRepository.findById(id)).thenReturn(Optional.of(order));
         when(productRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> orderItemService.addItemToOrder(id, addOrderItemDTO, customer));
+        assertThrows(EntityNotFoundException.class, () -> orderItemServiceImpl.addItemToOrder(id, addOrderItemDTO, customer));
     }
 
     @Test
@@ -90,7 +90,7 @@ public class OrderItemServiceTest {
         when(productRepository.findById(id)).thenReturn(Optional.of(product));
 
         AddOrderItemDTO dtoOutOfStock = new AddOrderItemDTO(id, 999);
-        assertThrows(OutOfStockException.class, () -> orderItemService.addItemToOrder(id, dtoOutOfStock , customer));
+        assertThrows(OutOfStockException.class, () -> orderItemServiceImpl.addItemToOrder(id, dtoOutOfStock , customer));
     }
 
     @Test
@@ -99,7 +99,7 @@ public class OrderItemServiceTest {
         when(productRepository.findById(id)).thenReturn(Optional.of(product));
 
         Customer otherCustomer = TestDataFactory.createCustomer(2L);
-        assertThrows(AccessDeniedException.class, () -> orderItemService.addItemToOrder(id, addOrderItemDTO , otherCustomer));
+        assertThrows(AccessDeniedException.class, () -> orderItemServiceImpl.addItemToOrder(id, addOrderItemDTO , otherCustomer));
     }
 
     @Test
@@ -107,11 +107,11 @@ public class OrderItemServiceTest {
         when(orderRepository.findById(id)).thenReturn(Optional.of(order));
         when(productRepository.findById(id)).thenReturn(Optional.of(product));
 
-        orderItemService.addItemToOrder(id, addOrderItemDTO, customer);
+        orderItemServiceImpl.addItemToOrder(id, addOrderItemDTO, customer);
         order.getItems().get(0).setId(id);
         assertEquals(new BigDecimal("100.00"), order.getTotalAmount());
 
-        orderItemService.removeItemFromOrder(id, removeOrderItemDTO, customer);
+        orderItemServiceImpl.removeItemFromOrder(id, removeOrderItemDTO, customer);
         assertEquals(new BigDecimal("0"), order.getTotalAmount());
 
         assertEquals(8, product.getStock());
@@ -121,13 +121,13 @@ public class OrderItemServiceTest {
     @Test
     void removeOrderItem_orderNotFound() {
         when(orderRepository.findById(id)).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, () -> orderItemService.removeItemFromOrder(id, removeOrderItemDTO , customer));
+        assertThrows(EntityNotFoundException.class, () -> orderItemServiceImpl.removeItemFromOrder(id, removeOrderItemDTO , customer));
     }
 
     @Test
     void removeOrderItem_orderItemNotFound() {
         when(orderRepository.findById(id)).thenReturn(Optional.of(order));
-        assertThrows(EntityNotFoundException.class, () -> orderItemService.removeItemFromOrder(id, removeOrderItemDTO , customer));
+        assertThrows(EntityNotFoundException.class, () -> orderItemServiceImpl.removeItemFromOrder(id, removeOrderItemDTO , customer));
     }
 
     @Test
@@ -135,11 +135,11 @@ public class OrderItemServiceTest {
         when(orderRepository.findById(id)).thenReturn(Optional.of(order));
         when(productRepository.findById(id)).thenReturn(Optional.of(product));
 
-        orderItemService.addItemToOrder(id, addOrderItemDTO, customer);
+        orderItemServiceImpl.addItemToOrder(id, addOrderItemDTO, customer);
         order.getItems().get(0).setId(id);
 
         Customer otherCustomer = TestDataFactory.createCustomer(2L);
-        assertThrows(AccessDeniedException.class, () -> orderItemService.removeItemFromOrder(id, removeOrderItemDTO , otherCustomer));
+        assertThrows(AccessDeniedException.class, () -> orderItemServiceImpl.removeItemFromOrder(id, removeOrderItemDTO , otherCustomer));
     }
 
     @Test
@@ -148,18 +148,18 @@ public class OrderItemServiceTest {
         when(orderRepository.save(any(Order.class))).thenReturn(order);
         when(productRepository.findById(id)).thenReturn(Optional.of(product));
 
-        orderItemService.addItemToOrder(id, addOrderItemDTO, customer);
+        orderItemServiceImpl.addItemToOrder(id, addOrderItemDTO, customer);
         order.getItems().get(0).setId(id);
         assertEquals(2, order.getItems().get(0).getQuantity());
 
-        orderItemService.updateItemQuantity(id, updateOrderItemQuantityDTO, customer);
+        orderItemServiceImpl.updateItemQuantity(id, updateOrderItemQuantityDTO, customer);
         assertEquals(5, order.getItems().get(0).getQuantity());
     }
 
     @Test
     void updateItemQuantity_orderNotFound() {
         when(orderRepository.findById(id)).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, () -> orderItemService.updateItemQuantity(id, updateOrderItemQuantityDTO, customer));
+        assertThrows(EntityNotFoundException.class, () -> orderItemServiceImpl.updateItemQuantity(id, updateOrderItemQuantityDTO, customer));
     }
 
     @Test
@@ -167,10 +167,10 @@ public class OrderItemServiceTest {
         when(orderRepository.findById(id)).thenReturn(Optional.of(order));
         when(productRepository.findById(id)).thenReturn(Optional.of(product));
 
-        orderItemService.addItemToOrder(id, addOrderItemDTO, customer);
+        orderItemServiceImpl.addItemToOrder(id, addOrderItemDTO, customer);
         order.getItems().get(0).setId(999L);
 
-        assertThrows(EntityNotFoundException.class, () -> orderItemService.updateItemQuantity(id, updateOrderItemQuantityDTO, customer));
+        assertThrows(EntityNotFoundException.class, () -> orderItemServiceImpl.updateItemQuantity(id, updateOrderItemQuantityDTO, customer));
     }
 
     @Test
@@ -178,11 +178,11 @@ public class OrderItemServiceTest {
         when(orderRepository.findById(id)).thenReturn(Optional.of(order));
         when(productRepository.findById(id)).thenReturn(Optional.of(product));
 
-        orderItemService.addItemToOrder(id, addOrderItemDTO, customer);
+        orderItemServiceImpl.addItemToOrder(id, addOrderItemDTO, customer);
         order.getItems().get(0).setId(id);
 
         UpdateOrderItemQuantityDTO outOfStockDTO = new UpdateOrderItemQuantityDTO(id, 999);
-        assertThrows(OutOfStockException.class, () -> orderItemService.updateItemQuantity(id, outOfStockDTO, customer));
+        assertThrows(OutOfStockException.class, () -> orderItemServiceImpl.updateItemQuantity(id, outOfStockDTO, customer));
     }
 
     @Test
@@ -190,10 +190,10 @@ public class OrderItemServiceTest {
         when(orderRepository.findById(id)).thenReturn(Optional.of(order));
         when(productRepository.findById(id)).thenReturn(Optional.of(product));
 
-        orderItemService.addItemToOrder(id, addOrderItemDTO, customer);
+        orderItemServiceImpl.addItemToOrder(id, addOrderItemDTO, customer);
         order.getItems().get(0).setId(id);
 
         Customer otherCustomer = TestDataFactory.createCustomer(2L);
-        assertThrows(AccessDeniedException.class, () -> orderItemService.updateItemQuantity(id, updateOrderItemQuantityDTO, otherCustomer));
+        assertThrows(AccessDeniedException.class, () -> orderItemServiceImpl.updateItemQuantity(id, updateOrderItemQuantityDTO, otherCustomer));
     }
 }

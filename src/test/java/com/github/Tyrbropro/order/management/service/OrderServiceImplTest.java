@@ -23,13 +23,13 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class OrderServiceTest {
+class OrderServiceImplTest {
 
     private OrderRepository orderRepository;
     private CustomerRepository customerRepository;
     private ProductRepository productRepository;
 
-    private OrderService orderService;
+    private OrderServiceImpl orderServiceImpl;
 
     private Customer customer;
     private Product product;
@@ -44,7 +44,7 @@ class OrderServiceTest {
         customerRepository = mock(CustomerRepository.class);
         productRepository = mock(ProductRepository.class);
 
-        orderService = new OrderService(orderRepository, customerRepository, productRepository);
+        orderServiceImpl = new OrderServiceImpl(orderRepository, customerRepository, productRepository);
 
         customer = TestDataFactory.createCustomer(id);
         product = TestDataFactory.createProduct(id);
@@ -58,7 +58,7 @@ class OrderServiceTest {
         when(productRepository.findById(id)).thenReturn(Optional.of(product));
         when(orderRepository.save(any(Order.class))).thenAnswer(i -> i.getArguments()[0]);
 
-        OrderResponseDTO response = orderService.createOrder(id, orderRequestDTOs);
+        OrderResponseDTO response = orderServiceImpl.createOrder(id, orderRequestDTOs);
 
         assertNotNull(response);
         assertEquals(1, response.orderItems().size());
@@ -76,7 +76,7 @@ class OrderServiceTest {
         when(customerRepository.findById(productId)).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class,
-                () -> orderService.createOrder(1L, orderRequestDTOs));
+                () -> orderServiceImpl.createOrder(1L, orderRequestDTOs));
     }
 
     @Test
@@ -87,7 +87,7 @@ class OrderServiceTest {
         when(productRepository.findById(id)).thenReturn(Optional.of(product));
 
         assertThrows(OutOfStockException.class,
-                () -> orderService.createOrder(1L, orderRequestDTOs));
+                () -> orderServiceImpl.createOrder(1L, orderRequestDTOs));
 
         verify(orderRepository, never()).save(any());
         verify(productRepository, never()).save(any());
@@ -97,7 +97,7 @@ class OrderServiceTest {
     void getAllOrdersByCustomer_success() {
         when(orderRepository.findAllByCustomerId(id)).thenReturn(List.of(order));
 
-        List<OrderResponseDTO> orders = orderService.getAllOrdersByCustomer(id);
+        List<OrderResponseDTO> orders = orderServiceImpl.getAllOrdersByCustomer(id);
 
         assertNotNull(orders);
         assertEquals(1, orders.size());
@@ -107,7 +107,7 @@ class OrderServiceTest {
     void getAllOrdersByCustomer_empty() {
         when(orderRepository.findAllByCustomerId(id)).thenReturn(List.of());
 
-        List<OrderResponseDTO> orders = orderService.getAllOrdersByCustomer(id);
+        List<OrderResponseDTO> orders = orderServiceImpl.getAllOrdersByCustomer(id);
 
         assertNotNull(orders);
         assertEquals(0, orders.size());
@@ -129,9 +129,9 @@ class OrderServiceTest {
         when(orderRepository.save(any(Order.class))).thenReturn(order);
         when(orderRepository.findById(id)).thenReturn(Optional.of(order));
 
-        orderService.createOrder(id, orderRequestDTOs);
+        orderServiceImpl.createOrder(id, orderRequestDTOs);
 
-        OrderResponseDTO result = orderService.getOrderById(id, customer);
+        OrderResponseDTO result = orderServiceImpl.getOrderById(id, customer);
 
         assertNotNull(result);
         assertEquals(new BigDecimal("150.00"), result.totalAmount());
@@ -142,7 +142,7 @@ class OrderServiceTest {
         when(customerRepository.findById(id)).thenReturn(Optional.of(customer));
 
         assertThrows(EntityNotFoundException.class,
-                () -> orderService.getOrderById(id,customer));
+                () -> orderServiceImpl.getOrderById(id,customer));
 
         verify(customerRepository, never()).save(any());
         verify(orderRepository, never()).save(any());
@@ -165,9 +165,9 @@ class OrderServiceTest {
         when(orderRepository.save(any(Order.class))).thenReturn(order);
         when(orderRepository.findById(id)).thenReturn(Optional.of(order));
 
-        orderService.createOrder(id, orderRequestDTOs);
+        orderServiceImpl.createOrder(id, orderRequestDTOs);
 
-        assertThrows(AccessDeniedException.class, () -> orderService.getOrderById(id, otherCustomer));
+        assertThrows(AccessDeniedException.class, () -> orderServiceImpl.getOrderById(id, otherCustomer));
     }
 
     @Test
@@ -183,9 +183,9 @@ class OrderServiceTest {
         when(orderRepository.findById(id)).thenReturn(Optional.of(order));
         when(orderRepository.save(any(Order.class))).thenReturn(order);
 
-        assertEquals(Order.Status.NEW, orderService.getOrderById(id, customer).status());
-        orderService.cancelOrder(id, customer);
-        assertEquals(Order.Status.CANCELLED, orderService.getOrderById(id, customer).status());
+        assertEquals(Order.Status.NEW, orderServiceImpl.getOrderById(id, customer).status());
+        orderServiceImpl.cancelOrder(id, customer);
+        assertEquals(Order.Status.CANCELLED, orderServiceImpl.getOrderById(id, customer).status());
 
         verify(orderRepository).save(any());
     }
@@ -206,7 +206,7 @@ class OrderServiceTest {
         when(orderRepository.save(any(Order.class))).thenReturn(order);
         when(orderRepository.findById(id)).thenReturn(Optional.of(order));
 
-        assertThrows(AccessDeniedException.class, () -> orderService.cancelOrder(id, otherCustomer));
+        assertThrows(AccessDeniedException.class, () -> orderServiceImpl.cancelOrder(id, otherCustomer));
 
         verify(orderRepository, never()).save(any());
     }
@@ -224,7 +224,7 @@ class OrderServiceTest {
         when(orderRepository.save(any(Order.class))).thenReturn(order);
         when(orderRepository.findById(id)).thenReturn(Optional.of(order));
 
-        assertThrows(IllegalStateException.class, () -> orderService.cancelOrder(id, customer));
+        assertThrows(IllegalStateException.class, () -> orderServiceImpl.cancelOrder(id, customer));
     }
 
     @Test
@@ -242,9 +242,9 @@ class OrderServiceTest {
         when(orderRepository.save(any(Order.class))).thenReturn(order);
         when(orderRepository.findById(id)).thenReturn(Optional.of(order));
 
-        assertEquals(Order.Status.NEW, orderService.getOrderById(id, customer).status());
-        orderService.updateStatusOrder(id, status);
-        assertEquals(status, orderService.getOrderById(id, customer).status());
+        assertEquals(Order.Status.NEW, orderServiceImpl.getOrderById(id, customer).status());
+        orderServiceImpl.updateStatusOrder(id, status);
+        assertEquals(status, orderServiceImpl.getOrderById(id, customer).status());
 
         verify(orderRepository).save(any());
     }
@@ -266,7 +266,7 @@ class OrderServiceTest {
         when(orderRepository.save(any(Order.class))).thenReturn(order);
         when(orderRepository.findById(id)).thenReturn(Optional.of(order));
 
-         assertThrows(EntityNotFoundException.class, () -> orderService.updateStatusOrder(otherOrderId, status));
+         assertThrows(EntityNotFoundException.class, () -> orderServiceImpl.updateStatusOrder(otherOrderId, status));
 
         verify(orderRepository, never()).save(any());
     }

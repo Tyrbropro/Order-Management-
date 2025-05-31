@@ -2,7 +2,6 @@ package com.github.Tyrbropro.order.management.controller;
 
 import com.github.Tyrbropro.order.management.dto.customer.CustomerRequestDTO;
 import com.github.Tyrbropro.order.management.dto.customer.CustomerResponseDTO;
-import com.github.Tyrbropro.order.management.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,15 +14,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Customers", description = "APIs for managing customer")
-@RestController
 @RequestMapping("/customers")
-public class CustomerController {
-
-    private final CustomerService customerService;
-
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
-    }
+public interface CustomerController {
 
     @Operation(summary = "Create a new customer", description = "Creates a new customer")
     @ApiResponses(value = {
@@ -32,9 +24,7 @@ public class CustomerController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("")
-    public ResponseEntity<CustomerResponseDTO> createCustomer(@RequestBody @Valid CustomerRequestDTO dto) {
-        return ResponseEntity.status(201).body(customerService.createCustomer(dto));
-    }
+    ResponseEntity<CustomerResponseDTO> createCustomer(@RequestBody @Valid CustomerRequestDTO dto);
 
     @Operation(summary = "Get customer by ID", description = "Returns the customer with the specified ID")
     @ApiResponses(value = {
@@ -43,11 +33,9 @@ public class CustomerController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerResponseDTO> getCustomerById(
+    ResponseEntity<CustomerResponseDTO> getCustomerById(
             @Parameter(description = "ID of the customer to retrieve", example = "1")
-            @PathVariable @Positive Long id) {
-        return ResponseEntity.ok(customerService.getCustomerById(id));
-    }
+            @PathVariable @Positive Long id);
 
     @Operation(summary = "Update a customer", description = "Updates customer with the given ID")
     @ApiResponses(value = {
@@ -57,11 +45,9 @@ public class CustomerController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<CustomerResponseDTO> updateCustomer(
+    ResponseEntity<CustomerResponseDTO> updateCustomer(
             @Parameter(description = "ID of the customer to update", example = "1")
-            @PathVariable @Positive Long id, @RequestBody @Valid CustomerRequestDTO details) {
-        return ResponseEntity.ok(customerService.updateCustomer(id, details));
-    }
+            @PathVariable @Positive Long id, @RequestBody @Valid CustomerRequestDTO details);
 
     @Operation(summary = "Delete a customer", description = "Deletes customer by ID")
     @ApiResponses(value = {
@@ -70,10 +56,7 @@ public class CustomerController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCustomer(
+    ResponseEntity<Void> deleteCustomer(
             @Parameter(description = "ID of the customer to delete", example = "1")
-            @PathVariable @Positive Long id) {
-            customerService.deleteCustomer(id);
-            return ResponseEntity.noContent().build();
-    }
+            @PathVariable @Positive Long id);
 }
