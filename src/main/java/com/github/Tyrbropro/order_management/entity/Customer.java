@@ -1,11 +1,10 @@
 package com.github.Tyrbropro.order_management.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.util.ArrayList;
 import java.util.List;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Table(name = "customers")
 @Entity
@@ -37,8 +36,8 @@ public class Customer {
     @Column(name = "role")
     Role role;
 
-    @OneToMany(mappedBy = "customer" , cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Order> orders = new ArrayList<>();
 
-    public enum Role{CUSTOMER, ADMIN}
+    public enum Role { CUSTOMER, ADMIN }
 }

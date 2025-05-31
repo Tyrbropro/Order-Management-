@@ -32,7 +32,7 @@ public class CustomerController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("")
-    public ResponseEntity<CustomerResponseDTO> createCustomer(@RequestBody @Valid CustomerRequestDTO dto){
+    public ResponseEntity<CustomerResponseDTO> createCustomer(@RequestBody @Valid CustomerRequestDTO dto) {
         return ResponseEntity.status(201).body(customerService.createCustomer(dto));
     }
 
@@ -45,7 +45,7 @@ public class CustomerController {
     @GetMapping("/{id}")
     public ResponseEntity<CustomerResponseDTO> getCustomerById(
             @Parameter(description = "ID of the customer to retrieve", example = "1")
-            @PathVariable @Positive Long id){
+            @PathVariable @Positive Long id) {
         return ResponseEntity.ok(customerService.getCustomerById(id));
     }
 
@@ -59,8 +59,8 @@ public class CustomerController {
     @PutMapping("/{id}")
     public ResponseEntity<CustomerResponseDTO> updateCustomer(
             @Parameter(description = "ID of the customer to update", example = "1")
-            @PathVariable @Positive Long id, @RequestBody @Valid CustomerRequestDTO details){
-        return ResponseEntity.ok(customerService.updateCustomer(id,details));
+            @PathVariable @Positive Long id, @RequestBody @Valid CustomerRequestDTO details) {
+        return ResponseEntity.ok(customerService.updateCustomer(id, details));
     }
 
     @Operation(summary = "Delete a customer", description = "Deletes customer by ID")
@@ -72,7 +72,7 @@ public class CustomerController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCustomer(
             @Parameter(description = "ID of the customer to delete", example = "1")
-            @PathVariable @Positive Long id){
+            @PathVariable @Positive Long id) {
             customerService.deleteCustomer(id);
             return ResponseEntity.noContent().build();
     }

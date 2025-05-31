@@ -10,4 +10,4 @@ public record AddOrderItemDTO (
 
         @Schema(description = "Quantity of the product", example = "5")
         @Min(value = 1) int quantity
-){}
+) { }

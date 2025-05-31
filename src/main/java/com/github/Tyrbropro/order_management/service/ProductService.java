@@ -6,10 +6,9 @@ import com.github.Tyrbropro.order_management.entity.Product;
 import com.github.Tyrbropro.order_management.mapper.ProductMapper;
 import com.github.Tyrbropro.order_management.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional

@@ -14,13 +14,12 @@ import com.github.Tyrbropro.order_management.repository.OrderRepository;
 import com.github.Tyrbropro.order_management.repository.ProductRepository;
 import com.github.Tyrbropro.order_management.util.Checking;
 import jakarta.persistence.EntityNotFoundException;
+import java.math.BigDecimal;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 @Service
 @Transactional
@@ -28,7 +27,9 @@ import java.util.List;
 public class OrderService {
 
     OrderRepository orderRepository;
+
     CustomerRepository customerRepository;
+
     ProductRepository productRepository;
 
     public OrderService(OrderRepository orderRepository,
@@ -39,7 +40,7 @@ public class OrderService {
         this.productRepository = productRepository;
     }
 
-    public OrderResponseDTO createOrder(Long idCustomer, OrderRequestDTO dto){
+    public OrderResponseDTO createOrder(Long idCustomer, OrderRequestDTO dto) {
         Customer customer = customerRepository.findById(idCustomer)
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
 
@@ -64,30 +65,31 @@ public class OrderService {
         return OrderMapper.toDto(savedOrder);
     }
 
-    public List<OrderResponseDTO> getAllOrdersByCustomer(Long idCustomer){
+    public List<OrderResponseDTO> getAllOrdersByCustomer(Long idCustomer) {
         return orderRepository.findAllByCustomerId(idCustomer).stream()
                 .map(OrderMapper::toDto).toList();
     }
 
-    public OrderResponseDTO getOrderById(Long id, Customer currentCustomer){
+    public OrderResponseDTO getOrderById(Long id, Customer currentCustomer) {
         Order order = getOrderOrThrow(id);
         Checking.checkCurrentCustomer(currentCustomer, order);
         return  OrderMapper.toDto(order);
     }
 
-    public OrderResponseDTO cancelOrder(Long id, Customer currentCustomer){
+    public OrderResponseDTO cancelOrder(Long id, Customer currentCustomer) {
         Order order = getOrderOrThrow(id);
         Checking.checkCurrentCustomer(currentCustomer, order);
 
-        if(order.getStatus() != Order.Status.NEW)
+        if (order.getStatus() != Order.Status.NEW) {
             throw new IllegalStateException("Only NEW orders be cancelled");
+        }
 
         order.setStatus(Order.Status.CANCELLED);
         orderRepository.save(order);
         return OrderMapper.toDto(order);
     }
 
-    public OrderResponseDTO updateStatusOrder(Long id,Order.Status status) {
+    public OrderResponseDTO updateStatusOrder(Long id, Order.Status status) {
         Order order = getOrderOrThrow(id);
         order.setStatus(status);
         orderRepository.save(order);

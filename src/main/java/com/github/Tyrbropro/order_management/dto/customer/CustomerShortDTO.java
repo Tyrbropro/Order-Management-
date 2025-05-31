@@ -23,4 +23,4 @@ public record CustomerShortDTO(
 
         @Schema(description = "Role assigned to the customer", example = "CUSTOMER")
         Customer.Role role
-) {}
+) { }

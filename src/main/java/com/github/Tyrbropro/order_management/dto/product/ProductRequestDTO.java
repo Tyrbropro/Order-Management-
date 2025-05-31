@@ -4,9 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
-import lombok.Builder;
-
 import java.math.BigDecimal;
+import lombok.Builder;
 
 @Builder
 public record ProductRequestDTO(
@@ -22,4 +21,4 @@ public record ProductRequestDTO(
 
         @Schema(description = "Unit price of the product", example = "29.99")
         @Positive @Min(value = 1) BigDecimal price
-) {}
+) { }

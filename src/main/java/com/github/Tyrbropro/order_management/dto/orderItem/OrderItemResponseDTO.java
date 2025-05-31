@@ -1,9 +1,8 @@
 package com.github.Tyrbropro.order_management.dto.orderItem;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
-
 import java.math.BigDecimal;
+import lombok.Builder;
 
 @Builder
 public record OrderItemResponseDTO(
@@ -18,4 +17,4 @@ public record OrderItemResponseDTO(
 
         @Schema(description = "Price of the product", example = "500")
         BigDecimal price
-) {}
+) { }

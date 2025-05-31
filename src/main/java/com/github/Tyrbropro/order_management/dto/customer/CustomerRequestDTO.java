@@ -7,9 +7,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-
 import java.util.List;
+import lombok.Builder;
 
 @Builder
 public record CustomerRequestDTO (
@@ -20,14 +19,14 @@ public record CustomerRequestDTO (
     @Email String email,
 
     @Schema(description = "Customer's residential address", example = "123 Main St, Springfield")
-    @NotBlank String address ,
+    @NotBlank String address,
 
     @Schema(description = "Password used for login", example = "securePassword123")
-    @NotBlank String password ,
+    @NotBlank String password,
 
     @Schema(description = "Role assigned to the customer", example = "CUSTOMER")
-    @NotNull Customer.Role role ,
+    @NotNull Customer.Role role,
 
     @Schema(description = "List of initial orders placed by the customer")
     @Valid List<OrderRequestDTO> orders
-){}
+) { }

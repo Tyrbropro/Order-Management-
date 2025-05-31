@@ -2,9 +2,8 @@ package com.github.Tyrbropro.order_management.validation.annotation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import org.hibernate.validator.internal.constraintvalidators.hv.UniqueElementsValidator;
-
 import java.lang.annotation.*;
+import org.hibernate.validator.internal.constraintvalidators.hv.UniqueElementsValidator;
 
 @Documented
 @Constraint(validatedBy = {UniqueElementsValidator.class})

@@ -6,13 +6,12 @@ import com.github.Tyrbropro.order_management.dto.customer.CustomerShortDTO;
 import com.github.Tyrbropro.order_management.dto.order.OrderResponseDTO;
 import com.github.Tyrbropro.order_management.entity.Customer;
 import com.github.Tyrbropro.order_management.entity.Order;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class CustomerMapper {
 
-    public static Customer toEntity(CustomerRequestDTO dto, List<Order> orders){
+    public static Customer toEntity(CustomerRequestDTO dto, List<Order> orders) {
         Customer customer = new Customer();
         customer.setName(dto.name());
         customer.setEmail(dto.email());
@@ -26,7 +25,7 @@ public class CustomerMapper {
         return customer;
     }
 
-    public static CustomerResponseDTO toDto(Customer customer){
+    public static CustomerResponseDTO toDto(Customer customer) {
         List<OrderResponseDTO> orderDtos = customer.getOrders() != null
                 ? customer.getOrders().stream()
                 .map(OrderMapper::toDto)
@@ -55,7 +54,7 @@ public class CustomerMapper {
                 .build();
     }
 
-    public static void updateEntity(Customer customer, CustomerRequestDTO dto, List<Order> orders){
+    public static void updateEntity(Customer customer, CustomerRequestDTO dto, List<Order> orders) {
         customer.setName(dto.name());
         customer.setEmail(dto.email());
         customer.setAddress(dto.address());

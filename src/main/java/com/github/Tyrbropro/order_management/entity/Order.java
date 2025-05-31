@@ -1,13 +1,12 @@
 package com.github.Tyrbropro.order_management.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Table(name = "orders")
@@ -41,6 +40,5 @@ public class Order {
     @JoinColumn(name = "order_id")
     List<OrderItem> items = new ArrayList<>();
 
-    public enum Status {NEW, SHIPPED, DELIVERED, CANCELLED}
-
+    public enum Status { NEW, SHIPPED, DELIVERED, CANCELLED }
 }

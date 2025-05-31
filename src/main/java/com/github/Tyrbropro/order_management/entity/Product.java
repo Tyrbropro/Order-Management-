@@ -1,10 +1,9 @@
 package com.github.Tyrbropro.order_management.entity;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.math.BigDecimal;
 
 @Entity
 @Table(name = "products")

@@ -10,11 +10,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Tag(name = "Products", description = "Product management APIs")
 @RestController
@@ -35,14 +34,14 @@ public class ProductController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("")
-    public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody @Valid ProductRequestDTO dto){
+    public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody @Valid ProductRequestDTO dto) {
         return ResponseEntity.status(201).body(productService.createProduct(dto));
     }
 
     @Operation(summary = "Get all products", description = "Returns a list of all available products")
     @ApiResponse(responseCode = "200", description = "Products retrieved successfully")
     @GetMapping("")
-    public ResponseEntity<List<ProductResponseDTO>> getAllProducts(){
+    public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
@@ -54,7 +53,7 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponseDTO> getProductById(
             @Parameter(description = "ID of the product to retrieve", example = "1")
-            @PathVariable @Positive Long id){
+            @PathVariable @Positive Long id) {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
@@ -70,8 +69,8 @@ public class ProductController {
     public ResponseEntity<ProductResponseDTO> updateProduct(
             @Parameter(description = "ID of the product to update", example = "1")
             @PathVariable @Positive Long id,
-            @RequestBody @Valid ProductRequestDTO dto){
-       return ResponseEntity.ok(productService.updateProduct(id,dto));
+            @RequestBody @Valid ProductRequestDTO dto) {
+       return ResponseEntity.ok(productService.updateProduct(id, dto));
     }
 
     @Operation(summary = "Delete a product", description = "Only admins can delete products")
@@ -84,7 +83,7 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(
             @Parameter(description = "ID of the product to delete", example = "1")
-            @PathVariable @Positive Long id){
+            @PathVariable @Positive Long id) {
             productService.deleteProduct(id);
             return ResponseEntity.noContent().build();
     }

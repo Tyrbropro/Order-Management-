@@ -7,11 +7,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.Builder;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.Builder;
+
 @Builder
 public record OrderRequestDTO (
     @Schema(description = "Date and time when the order was placed (must be today or in the future)",
@@ -26,4 +26,4 @@ public record OrderRequestDTO (
 
     @Schema(description = "List of items included in the order")
     @Valid List<OrderItemRequestDTO> orderItems
-){}
+) { }

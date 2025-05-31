@@ -8,4 +8,4 @@ public record OrderStatusUpdateDTO(
         @Schema(description = "New status to set for the order",
                 example = "NEW")
        @NotNull Order.Status status
-){}
+) { }

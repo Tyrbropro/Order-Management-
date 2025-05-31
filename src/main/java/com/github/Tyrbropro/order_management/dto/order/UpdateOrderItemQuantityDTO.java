@@ -9,4 +9,4 @@ public record UpdateOrderItemQuantityDTO(
 
         @Schema(description = "New quantity for the product", example = "5")
         @Positive int newQuantity
-) {}
+) { }

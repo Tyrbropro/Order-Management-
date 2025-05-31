@@ -4,12 +4,10 @@ import com.github.Tyrbropro.order_management.dto.customer.CustomerShortDTO;
 import com.github.Tyrbropro.order_management.dto.orderItem.OrderItemResponseDTO;
 import com.github.Tyrbropro.order_management.entity.Order;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
 import java.util.List;
+import lombok.Builder;
 
 @Builder
 public record OrderResponseDTO (
@@ -31,4 +29,4 @@ public record OrderResponseDTO (
 
     @Schema(description = "List of items included in the order")
     List<OrderItemResponseDTO> orderItems
-){}
+) { }

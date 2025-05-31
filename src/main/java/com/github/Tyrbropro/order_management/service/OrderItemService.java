@@ -27,10 +27,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderItemService {
 
     OrderRepository orderRepository;
+
     ProductRepository productRepository;
+
     OrderService orderService;
 
-    public OrderItemService(OrderRepository orderRepository, ProductRepository productRepository, OrderService orderService) {
+    public OrderItemService(OrderRepository orderRepository, ProductRepository productRepository,
+                            OrderService orderService) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
         this.orderService = orderService;
@@ -44,8 +47,9 @@ public class OrderItemService {
 
         Checking.checkCurrentCustomer(currentCustomer, order);
 
-        if (product.getStock() < dto.quantity())
+        if (product.getStock() < dto.quantity()) {
             throw new OutOfStockException("Not enough stock for product: " + product.getName());
+        }
 
         OrderItem orderItem = new OrderItem();
         orderItem.setProduct(product);
@@ -73,8 +77,9 @@ public class OrderItemService {
 
         boolean removed = order.getItems().removeIf(item -> item.getId().equals(dto.orderItemId()));
 
-        if (!removed)
+        if (!removed) {
             throw new EntityNotFoundException("OrderItem not found");
+        }
 
         orderService.calculateTotalAmount(order);
     }
@@ -95,8 +100,9 @@ public class OrderItemService {
 
         Product product = orderItem.getProduct();
 
-        if (difference > 0 && product.getStock() < difference)
+        if (difference > 0 && product.getStock() < difference) {
             throw new OutOfStockException("Not enough stock for product: " + product.getName());
+        }
 
         orderItem.setQuantity(dto.newQuantity());
         product.setStock(product.getStock() - difference);

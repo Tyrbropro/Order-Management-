@@ -6,13 +6,12 @@ import com.github.Tyrbropro.order_management.dto.orderItem.OrderItemResponseDTO;
 import com.github.Tyrbropro.order_management.entity.Customer;
 import com.github.Tyrbropro.order_management.entity.Order;
 import com.github.Tyrbropro.order_management.entity.OrderItem;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class OrderMapper {
 
-    public static Order toEntity(OrderRequestDTO dto, Customer customer, List<OrderItem> items){
+    public static Order toEntity(OrderRequestDTO dto, Customer customer, List<OrderItem> items) {
         return Order.builder()
                 .customer(customer)
                 .orderDate(dto.orderDate())
@@ -22,7 +21,7 @@ public class OrderMapper {
                 .build();
     }
 
-    public static Order toEntity(OrderRequestDTO dto, Customer customer){
+    public static Order toEntity(OrderRequestDTO dto, Customer customer) {
         return Order.builder()
                 .customer(customer)
                 .orderDate(dto.orderDate())
@@ -31,7 +30,7 @@ public class OrderMapper {
                 .build();
     }
 
-    public static OrderResponseDTO toDto(Order order){
+    public static OrderResponseDTO toDto(Order order) {
         List<OrderItemResponseDTO> itemDtos = order.getItems().stream()
                 .map(OrderItemMapper::toDto)
                 .collect(Collectors.toList());
@@ -46,7 +45,7 @@ public class OrderMapper {
                 .build();
     }
 
-    public static void updateEntity(Order order, OrderRequestDTO dto, List<OrderItem> items){
+    public static void updateEntity(Order order, OrderRequestDTO dto, List<OrderItem> items) {
         order.setOrderDate(dto.orderDate());
         order.setStatus(dto.status());
         order.setTotalAmount(dto.totalAmount());

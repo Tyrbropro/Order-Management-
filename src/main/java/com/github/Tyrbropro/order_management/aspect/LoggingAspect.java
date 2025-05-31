@@ -1,6 +1,7 @@
 package com.github.Tyrbropro.order_management.aspect;
 
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -9,14 +10,12 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.util.Arrays;
-
 @Aspect
 @Component
 public final class LoggingAspect {
 
     @Around("execution( * com.github.Tyrbropro.order_management.controller..*(..))")
-    public Object logControllerMethods(ProceedingJoinPoint joinPoint) throws Throwable{
+    public Object logControllerMethods(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request = getCurrentHttpRequest();
 
         String httpMethod = request != null ? request.getMethod() : "N/A";
@@ -43,7 +42,7 @@ public final class LoggingAspect {
     }
 
     @Around("execution(* com.github.Tyrbropro.order_management.service..*(..))")
-    public Object logServiceMethods(ProceedingJoinPoint joinPoint) throws Throwable{
+    public Object logServiceMethods(ProceedingJoinPoint joinPoint) throws Throwable {
         String methodName = joinPoint.getSignature().getName();
         Object[] args = joinPoint.getArgs();
 
@@ -55,7 +54,7 @@ public final class LoggingAspect {
                 methodName,
                 Arrays.toString(args),
                 result,
-                (after-before));
+                (after - before));
 
         return result;
     }

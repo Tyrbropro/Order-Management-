@@ -12,12 +12,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Tag(name = "Orders", description = "APIs for managing customer orders")
 @RestController
@@ -36,7 +35,8 @@ public class OrderController {
             @ApiResponse(responseCode = "400", description = "Invalid order data provided")
     })
     @PostMapping("")
-    public ResponseEntity<OrderResponseDTO> createOrder(@RequestBody @Valid OrderRequestDTO dto, @AuthenticationPrincipal Customer currentCustomer) {
+    public ResponseEntity<OrderResponseDTO> createOrder(@RequestBody @Valid OrderRequestDTO dto,
+                                                        @AuthenticationPrincipal Customer currentCustomer) {
         OrderResponseDTO response = orderService.createOrder(currentCustomer.getId(), dto);
         return ResponseEntity.status(201).body(response);
     }
@@ -58,9 +58,10 @@ public class OrderController {
     @PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
     @GetMapping("/{id}")
     public ResponseEntity<OrderResponseDTO> getOrderById(@AuthenticationPrincipal Customer currentCustomer,
-                                                         @Parameter(description = "ID of the order to retrieve", example = "1")
-                                                         @PathVariable @Positive Long id){
-        return ResponseEntity.ok(orderService.getOrderById(id,currentCustomer));
+                                                         @Parameter(description = "ID of the order to retrieve",
+                                                                 example = "1")
+                                                         @PathVariable @Positive Long id) {
+        return ResponseEntity.ok(orderService.getOrderById(id, currentCustomer));
     }
 
     @Operation(summary = "Cancel order",
@@ -73,7 +74,7 @@ public class OrderController {
     @PutMapping("/{id}/cancel")
     public ResponseEntity<OrderResponseDTO> cancelOrder(
             @Parameter(description = "ID of the order to cancel", example = "1")
-            @PathVariable Long id, @AuthenticationPrincipal Customer currentCustomer){
+            @PathVariable Long id, @AuthenticationPrincipal Customer currentCustomer) {
             return ResponseEntity.ok(orderService.cancelOrder(id, currentCustomer));
     }
 
@@ -89,7 +90,7 @@ public class OrderController {
     @PutMapping("/{id}/status")
     public ResponseEntity<OrderResponseDTO> updateStatusOrder(
             @Parameter(description = "ID of the order to update", example = "1")
-            @PathVariable Long id, @RequestBody @Valid OrderStatusUpdateDTO dto){
+            @PathVariable Long id, @RequestBody @Valid OrderStatusUpdateDTO dto) {
             return ResponseEntity.ok(orderService.updateStatusOrder(id, dto.status()));
     }
 }

@@ -1,34 +1,26 @@
-version: '3.8'
-
 services:
-  mysql:
+  mysql-db:
     image: mysql:8.0
     container_name: mysql-db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: springcourse
+      MYSQL_ROOT_PASSWORD: ${DB_PASS}
       MYSQL_DATABASE: order_management
-      MYSQL_USER: root
-      MYSQL_PASSWORD: springcourse
     ports:
       - "3306:3306"
     networks:
-      - order-network
+      - backend
 
-  app:
+  order-app:
     build: .
     container_name: order-app
-    restart: always
+    depends_on:
+      - mysql-db
     ports:
       - "8080:8080"
-    depends_on:
-      - mysql
     networks:
-      - order-network
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/order_management?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: springcourse
+      - backend
 
 networks:
-  order-network:
+  backend:
+    driver: bridge

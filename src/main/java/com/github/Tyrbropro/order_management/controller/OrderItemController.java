@@ -41,7 +41,8 @@ public class OrderItemController {
     @PostMapping("")
     public ResponseEntity<OrderItemResponseDTO> addItemToOrder(
             @Parameter(description = "ID of the order", example = "1")
-            @PathVariable @Positive Long orderId, @RequestBody @Valid AddOrderItemDTO dto, @AuthenticationPrincipal Customer currentCustomer){
+            @PathVariable @Positive Long orderId, @RequestBody @Valid AddOrderItemDTO dto,
+            @AuthenticationPrincipal Customer currentCustomer) {
         return ResponseEntity.status(201).body(orderItemService.addItemToOrder(orderId, dto, currentCustomer));
     }
 
@@ -56,7 +57,8 @@ public class OrderItemController {
     @DeleteMapping("")
     public ResponseEntity<OrderResponseDTO> removeItemFromOrder(
             @Parameter(description = "ID of the order", example = "1")
-            @PathVariable @Positive Long orderId, @RequestBody @Valid RemoveOrderItemDTO dto, @AuthenticationPrincipal Customer currentCustomer){
+            @PathVariable @Positive Long orderId, @RequestBody @Valid RemoveOrderItemDTO dto,
+            @AuthenticationPrincipal Customer currentCustomer) {
         orderItemService.removeItemFromOrder(orderId, dto, currentCustomer);
         return ResponseEntity.noContent().build();
     }
@@ -74,7 +76,8 @@ public class OrderItemController {
     @PutMapping("")
     public ResponseEntity<OrderResponseDTO> updateItemQuantity(
             @Parameter(description = "ID of the order", example = "1")
-            @PathVariable @Positive Long orderId, @RequestBody @Valid UpdateOrderItemQuantityDTO dto, @AuthenticationPrincipal Customer currentCustomer){
+            @PathVariable @Positive Long orderId, @RequestBody @Valid UpdateOrderItemQuantityDTO dto,
+            @AuthenticationPrincipal Customer currentCustomer) {
             return ResponseEntity.ok(orderItemService.updateItemQuantity(orderId, dto, currentCustomer));
     }
 }

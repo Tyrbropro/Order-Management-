@@ -3,9 +3,8 @@ package com.github.Tyrbropro.order_management.dto.customer;
 import com.github.Tyrbropro.order_management.dto.order.OrderResponseDTO;
 import com.github.Tyrbropro.order_management.entity.Customer;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
-
 import java.util.List;
+import lombok.Builder;
 
 @Builder
 public record CustomerResponseDTO (
@@ -29,4 +28,4 @@ public record CustomerResponseDTO (
 
     @Schema(description = "List of initial orders placed by the customer")
     List<OrderResponseDTO> orders
-){}
+) { }

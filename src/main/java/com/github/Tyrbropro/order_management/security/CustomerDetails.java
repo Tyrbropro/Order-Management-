@@ -1,17 +1,17 @@
 package com.github.Tyrbropro.order_management.security;
 
 import com.github.Tyrbropro.order_management.entity.Customer;
+import java.util.Collection;
+import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
-
 public class CustomerDetails implements UserDetails {
 
     private final Customer customer;
-    public CustomerDetails(Customer customer){
+
+    public CustomerDetails(Customer customer) {
         this.customer = customer;
     }
 
@@ -30,7 +30,7 @@ public class CustomerDetails implements UserDetails {
         return customer.getEmail();
     }
 
-    public Customer getCustomer(){
+    public Customer getCustomer() {
         return customer;
     }
 }

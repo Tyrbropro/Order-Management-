@@ -6,4 +6,4 @@ import jakarta.validation.constraints.Positive;
 public record RemoveOrderItemDTO(
         @Schema(description = "ID of the order item to remove", example = "1")
         @Positive Long orderItemId
-) {}
+) { }
