@@ -7,5 +7,4 @@ RUN mvn clean package -DskipTests
 FROM openjdk:17-jdk-slim
 WORKDIR /app
 COPY --from=builder /app/target/order-management-0.0.1-SNAPSHOT.jar app.jar
-RUN chmod +x wait-for-it.sh
-ENTRYPOINT ["./wait-for-it.sh", "mysql-db:3306", "--", "java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
